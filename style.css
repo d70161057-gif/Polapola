@@ -1,0 +1,253 @@
+/* Global Styles & Variables */
+:root {
+    --primary-red: #e50914;
+    --dark-red: #8b0000;
+    --deep-black: #0a0a0a;
+    --text-color: #eee;
+    --shadow-color-base: rgba(0, 0, 0, 0.5);
+    --shadow-color-hover: rgba(255, 0, 0, 0.3);
+    --card-bg: rgba(20, 0, 0, 0.6);
+    --transition-speed: 0.3s;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Exo 2', sans-serif;
+    color: var(--text-color);
+    background-color: var(--deep-black);
+    min-height: 100vh; /* Essential for vertical centering */
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center;    /* Center vertically */
+    overflow: hidden; /* Prevent scrollbars from background animation */
+
+    /* Animated Background */
+    background: linear-gradient(
+        -45deg,
+        var(--deep-black),
+        var(--dark-red),
+        var(--primary-red),
+        var(--dark-red)
+    );
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+}
+
+/* Shadow Overlay */
+#page-container::before {
+    content: '';
+    position: fixed; /* Use fixed to ensure it covers viewport */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9));
+    pointer-events: none; /* Allows interaction with elements below */
+    z-index: 0; /* Behind content */
+}
+
+/* Main Content Wrapper */
+#page-container {
+    position: relative; /* Needed for z-index stacking */
+    z-index: 1; /* Ensure content is above overlay */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    max-width: 1200px; /* Limit content width */
+    width: 100%;
+    text-align: center;
+    /* Removed flex centering here as body handles it */
+}
+
+/* Top Bar */
+.top-bar {
+    width: 100%;
+    background-color: rgba(15, 0, 0, 0.7);
+    padding: 10px 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 15px var(--shadow-color-base);
+    position: relative; /* For lantern positioning */
+    overflow: hidden; /* Hide lanterns outside */
+    border-bottom: 1px solid var(--primary-red);
+    z-index: 2; /* Above background overlay */
+}
+
+.top-bar h1 {
+    color: var(--primary-red);
+    text-shadow: 0 0 10px var(--primary-red), 0 0 20px var(--primary-red);
+    font-weight: 700;
+    margin: 10px 0;
+}
+
+/* Lantern Animation */
+.lantern-container {
+    position: absolute;
+    top: 0;
+    left: -200px; /* Start off-screen left */
+    width: calc(100% + 400px); /* Span wider than container */
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    animation: slideLanterns 20s linear infinite alternate;
+    z-index: -1; /* Behind the text */
+}
+
+.lantern {
+    width: 40px; /* Adjust size as needed */
+    height: 40px;
+    opacity: 0.6;
+    filter: drop-shadow(0 0 5px var(--primary-red)) drop-shadow(0 0 10px var(--dark-red));
+    /* Add animation delay variation */
+    animation: floatLantern 3s ease-in-out infinite alternate;
+}
+
+.lantern:nth-child(2) { animation-delay: -0.5s; }
+.lantern:nth-child(3) { animation-delay: -1s; animation-duration: 2.5s; }
+.lantern:nth-child(4) { animation-delay: -1.5s; animation-duration: 3.5s; }
+.lantern:nth-child(5) { animation-delay: -2s; opacity: 0.4; }
+
+
+/* Sharingan Grid */
+.sharingan-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 columns by default */
+    grid-template-rows: repeat(2, 1fr); /* 2 rows */
+    gap: 25px; /* Space between cards */
+    padding: 20px;
+    width: 100%;
+    max-width: 800px; /* Adjust as needed */
+    z-index: 2; /* Ensure cards are above overlay */
+}
+
+/* Sharingan Cards */
+.sharingan-card {
+    background-color: var(--card-bg);
+    border-radius: 20px; /* Rounded corners */
+    box-shadow: 0 8px 16px var(--shadow-color-base), 0 0 10px var(--shadow-color-hover);
+    overflow: hidden; /* Keep GIF contained */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    transition: transform var(--transition-speed) ease-in-out,
+                box-shadow var(--transition-speed) ease-in-out;
+    aspect-ratio: 1 / 1; /* Make cards square */
+}
+
+.sharingan-card img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Scale while preserving aspect ratio */
+    max-width: 100%; /* Ensure it doesn't overflow card */
+    max-height: 100%;
+    transition: transform var(--transition-speed) ease-in-out;
+}
+
+.sharingan-card:hover {
+    transform: translateY(-8px); /* Lift effect */
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6), 0 0 15px var(--shadow-color-hover);
+}
+
+.sharingan-card:hover img {
+     transform: scale(1.03); /* Slight zoom */
+}
+
+/* Animations */
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes slideLanterns {
+    from { transform: translateX(0%); }
+    to { transform: translateX(50%); } /* Adjust this value based on lantern-container width */
+}
+
+@keyframes floatLantern {
+    0% { transform: translateY(0px) scale(0.95); }
+    50% { transform: translateY(-10px) scale(1.05); }
+    100% { transform: translateY(0px) scale(0.95); }
+}
+
+/* --- Responsiveness --- */
+
+/* Tablets and smaller desktops */
+@media (max-width: 992px) {
+    .sharingan-grid {
+        gap: 20px;
+        padding: 15px;
+    }
+    .sharingan-card {
+        border-radius: 15px;
+        padding: 10px;
+    }
+}
+
+/* Mobile devices */
+@media (max-width: 768px) {
+    #page-container {
+        padding: 10px;
+         /* Adjust vertical alignment if needed on mobile */
+        justify-content: flex-start; /* Start from top */
+        min-height: auto; /* Let content define height */
+        padding-top: 100px; /* Space for fixed top bar, IF you make it fixed */
+         /* Ensure centering is still decent */
+        /* If you uncomment the fixed header below, remove the body flex properties */
+    }
+
+    .top-bar {
+        margin-bottom: 20px;
+        border-radius: 0; /* Full width top bar */
+        position: fixed; /* Make header fixed */
+        top: 0;
+        left: 0;
+        z-index: 10; /* Ensure it's on top */
+        max-height: 80px; /* Limit height */
+        justify-content: center; /* Center content if needed */
+    }
+     /* Adjust body if header is fixed */
+    body {
+       align-items: flex-start; /* Align content to top */
+    }
+
+    .lantern-container {
+        display: none; /* Hide lanterns on mobile for simplicity, or use smaller ones */
+    }
+
+    .sharingan-grid {
+        grid-template-columns: 1fr; /* Stack cards in a single column */
+        grid-template-rows: auto; /* Rows adjust automatically */
+        gap: 15px;
+        padding: 10px;
+        max-width: 400px; /* Smaller max width for mobile */
+    }
+
+    .sharingan-card {
+        border-radius: 10px;
+        padding: 8px;
+    }
+
+    .top-bar h1 {
+        font-size: 1.5em;
+    }
+}
+
+/* Smallest devices */
+@media (max-width: 480px) {
+     .top-bar h1 {
+        font-size: 1.2em;
+    }
+    .sharingan-grid {
+         max-width: 95%;
+    }
+}
